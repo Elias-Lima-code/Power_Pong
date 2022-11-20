@@ -1,15 +1,23 @@
 import pygame
+from time import sleep
 import sys
 from pygame.locals import *
-from shapely.geometry import Polygon
+from utility.constants import colors
 import datetime
 from random import randint
-from utility.math import clamp, between
+from utility.math import between
+from content.models.game_object import GameObject
+
 
 playing = False
 
 
 def handle_events(game):
+    """Iterates through each event and call it's appropriate function.
+
+    Args:
+        game (Game): The currently running game.
+    """
     for event in pygame.event.get():
 
         match event.type:
@@ -23,20 +31,13 @@ def handle_events(game):
             case pygame.KEYUP:
                 handle_keyup(event.key, game)
 
-
-def quit_app():
-    """Stops the game and closes application.
-    """
-    pygame.display.quit()
-    pygame.quit()
-    sys.exit()
-
-def restart(game):
-    game.start()
-    game.drawer.clear()
-
 def handle_keydown(key, game):
+    """Decides what to do with the key pressed by the user.
 
+        Args:
+            key (int): The pygame keycode of the key.
+            game (Game): The currently running game.
+    """
     match key:
         case pygame.K_r:
             restart(game)
@@ -47,54 +48,24 @@ def handle_keydown(key, game):
 
 
 def handle_keyup(key, game):
+    """Decides what to do with the key released by the user.
 
+    Args:
+        key (int): The pygame keycode of the key.
+        game (Game): The currently running game.
+    """
     if key in game.pressed_keys:
         game.pressed_keys.remove(key)
-
-
-def read_input(game):
-
-    def contains_key(key):
-        return key in game.pressed_keys
-
-    #def in_bounds(player):
-     #   return player.pos.y >= 0 #and player.pos.y + player.size[1] #<= game.drawer.height_arena 
-
-    def can_move(key, player):
-        return contains_key(key) #wand in_bounds(player) 
-
-    if can_move(K_w, game.p1):
-        game.p1.pos.y = clamp(game.p1.pos.y-game.p1.speed,
-                              0, game.drawer.height_arena - game.p1.size[1])
-
-    if can_move(K_s, game.p1):
-        game.p1.pos.y = clamp(game.p1.pos.y+game.p1.speed,
-                              0, game.drawer.height_arena - game.p1.size[1])
-
-    if can_move(K_UP, game.p2):
-        game.p2.pos.y = clamp(game.p2.pos.y-game.p2.speed,
-                              0, game.drawer.height_arena - game.p2.size[1])
-
-    if can_move(K_DOWN, game.p2):
-        game.p2.pos.y = clamp(game.p2.pos.y+game.p2.speed,
-                              0, game.drawer.height_arena - game.p2.size[1])
-
-
-def ball_movemt(game):
-
-    game.ball.pos.x += game.ball.xspeed * game.ball.direction.x
-    game.ball.pos.y += game.ball.yspeed * game.ball.direction.y
-
-    for o in game.ball_targets:
-        if collides(game.ball.get_polygon(), o.get_polygon()):
-            if o.reflection_dir[0] == 1 :
-                game.ball.direction.x *= -1 
-            if o.reflection_dir[1] == 1 :
-                game.ball.direction.y *= -1 
-
-
-def collides(polygon1, polygon2):
-
-    return polygon1.intersects(polygon2)
     
+def restart(game):
+    """Restarts the game from the beginning.
+    """
+    game.start()
+    game.drawer.clear()
     
+def quit_app():
+    """Stops the game and closes application.
+    """
+    pygame.display.quit()
+    pygame.quit()
+    sys.exit()
