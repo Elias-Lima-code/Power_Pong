@@ -10,5 +10,7 @@ class Ball(GameObject):
         #the vertical speed of the ball
         self.yspeed = kwargs.pop("yspeed", 0)
         #the horizontal and vertical direction that the ball is moving to
-        self.direction = kwargs.pop("direction",(1,1))
+        self.direction = kwargs.pop("direction",(0.5, 0.5))
+        #the player that is holding the ball
+        self.player_owner = None
     

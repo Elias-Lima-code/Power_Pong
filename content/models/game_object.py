@@ -18,11 +18,16 @@ class GameObject(pygame.sprite.Sprite):
         #the rect of this object
         self.rect = self.image.get_rect(topleft = self.pos)
         #the rect of this object in the last frame
-        self.last_rect = self.rect.copy()        
+        self.last_rect = self.rect.copy() 
+        #if this object should be rendered
+        self.is_alive = kwargs.pop("is_alive", True)       
 
     def draw(self,screen):
         """Draws this object.
            Args:
                screen (pygame.surface): The screen to draw on.
         """
+        if not self.is_alive:
+            return
         pygame.draw.rect(screen, self.color ,(self.pos, self.size))
+

@@ -61,6 +61,7 @@ def restart(game):
     """Restarts the game from the beginning.
     """
     game.start()
+    game.p1.score
     game.drawer.clear()
     
 def quit_app():
